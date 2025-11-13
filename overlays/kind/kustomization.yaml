@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: cattle-monitoring-system 
+
+resources:
+  - ./resources/namespace.yaml
+
+helmGlobals:
+  chartHome: ../../charts
+helmCharts:
+  - name: kube-prometheus-stack
+    releaseName: kube-prometheus-stack  
+    valuesFile: values.yaml
+    namespace: cattle-monitoring-system 
+    includeCRDs: true
