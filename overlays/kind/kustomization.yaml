@@ -14,10 +14,9 @@ helmCharts:
     includeCRDs: true
     namespace: cattle-monitoring-system
 
-patches:   
+patches:
   - target:
       kind: ServiceMonitor
-      name: rancher-monitoring-grafana
     patch: |-
       - op: add
         path: /spec/endpoints/0/metricRelabelings
