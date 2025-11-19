@@ -23,7 +23,7 @@ patches:
         path: /spec/endpoints/0/metricRelabelings
         value:
           - sourceLabels: [__name__]
-            regex: "(^go_.*|^promhttp_.*|^prometheus_.*|^target_info$)"
+            regex: "(^go_.*|^promhttp_.*|^target_info$)"
             action: drop
 
 commonAnnotations:
