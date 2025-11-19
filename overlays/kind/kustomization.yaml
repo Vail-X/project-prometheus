@@ -17,7 +17,7 @@ helmCharts:
 patches:
   - target:
       kind: ServiceMonitor
-      labelSelector: "app.kubernetes.io/instance=rancher-monitoring"
+      labelSelector: "release=rancher-monitoring"
     patch: |-
       - op: add
         path: /spec/endpoints/0/metricRelabelings
