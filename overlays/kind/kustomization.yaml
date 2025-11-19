@@ -11,8 +11,26 @@ helmCharts:
   - name: kube-prometheus-stack
     releaseName: rancher-monitoring
     valuesFile: values.yaml
-    namespace: cattle-monitoring-system
     includeCRDs: true
+    namespace: cattle-monitoring-system
+
+patches:   
+  - target:
+      kind: ServiceMonitor
+      name: rancher-monitoring-grafana
+    patch: |-
+      - op: add
+        path: /spec/endpoints/0/metricRelabelings
+        value:
+          - sourceLabels: [__name__]
+            regex: "(^go_.*|^promhttp_.*|^prometheus_.*|^target_info$)"
+            action: drop
+          - sourceLabels: [__name__]
+            regex: 'process_.*'
+            action: drop
+          - sourceLabels: [__name__]
+            regex: '.*_bucket$'
+            action: drop
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: "ServerSideApply=true"
