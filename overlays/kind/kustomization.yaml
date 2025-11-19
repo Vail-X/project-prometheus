@@ -14,17 +14,17 @@ helmCharts:
     includeCRDs: true
     namespace: cattle-monitoring-system
 
-patches:
-  - target:
-      kind: ServiceMonitor
-      labelSelector: "app.kubernetes.io/instance=rancher-monitoring"
-    patch: |-
-      - op: add
-        path: /spec/endpoints/0/metricRelabelings
-        value:
-          - sourceLabels: [__name__]
-            regex: "(^go_.*|^promhttp_.*|^prometheus_.*|^target_info$)"
-            action: drop
+# patches:
+#   - target:
+#       kind: ServiceMonitor
+#       labelSelector: "app.kubernetes.io/instance=rancher-monitoring"
+#     patch: |-
+#       - op: add
+#         path: /spec/endpoints/0/metricRelabelings
+#         value:
+#           - sourceLabels: [__name__]
+#             regex: "(^go_.*|^promhttp_.*|^prometheus_.*|^target_info$)"
+#             action: drop
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: "ServerSideApply=true"
