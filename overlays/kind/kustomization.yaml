@@ -17,18 +17,13 @@ helmCharts:
 patches:
   - target:
       kind: ServiceMonitor
+      labelSelector: "app.kubernetes.io/instance=rancher-monitoring"
     patch: |-
       - op: add
         path: /spec/endpoints/0/metricRelabelings
         value:
           - sourceLabels: [__name__]
             regex: "(^go_.*|^promhttp_.*|^prometheus_.*|^target_info$)"
-            action: drop
-          - sourceLabels: [__name__]
-            regex: 'process_.*'
-            action: drop
-          - sourceLabels: [__name__]
-            regex: '.*_bucket$'
             action: drop
 
 commonAnnotations:
