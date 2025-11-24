@@ -19,16 +19,12 @@ patches:
       kind: ServiceMonitor
       labelSelector: "release=rancher-monitoring"
     patch: |-
-      - op: add
-        path: /spec/endpoints/0/metricRelabelings
-        value: []
-  - target:
+      apiVersion: monitoring.coreos.com/v1
       kind: ServiceMonitor
-      labelSelector: "release=rancher-monitoring"
-    patch: |-
-      - op: add
-        path: /spec/endpoints/0/metricRelabelings/-
-        value:
+      spec:
+        endpoints:
+        - port: metrics
+          metricRelabelings:
           - sourceLabels: [__name__]
             regex: "(^go_.*|^promhttp_.*|^target_info$)"
             action: drop
