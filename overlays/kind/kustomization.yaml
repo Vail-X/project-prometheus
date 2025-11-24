@@ -20,6 +20,13 @@ patches:
       labelSelector: "release=rancher-monitoring"
     patch: |-
       - op: add
+        path: /spec/endpoints/0/metricRelabelings
+        value: []
+  - target:
+      kind: ServiceMonitor
+      labelSelector: "release=rancher-monitoring"
+    patch: |-
+      - op: add
         path: /spec/endpoints/0/metricRelabelings/-
         value:
           - sourceLabels: [__name__]
