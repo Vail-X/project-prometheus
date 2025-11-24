@@ -14,20 +14,5 @@ helmCharts:
     includeCRDs: true
     namespace: cattle-monitoring-system
 
-patches:
-  - target:
-      kind: ServiceMonitor
-      labelSelector: "release=rancher-monitoring"
-    patch: |-
-      apiVersion: monitoring.coreos.com/v1
-      kind: ServiceMonitor
-      spec:
-        endpoints:
-        - port: metrics
-          metricRelabelings:
-          - sourceLabels: [__name__]
-            regex: "(^go_.*|^promhttp_.*|^target_info$)"
-            action: drop
-
 commonAnnotations:
   argocd.argoproj.io/sync-options: "ServerSideApply=true"
