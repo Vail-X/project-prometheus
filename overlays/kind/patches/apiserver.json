@@ -1,0 +1,11 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/endpoints/0/metricRelabelings/-",
+    "value": {
+      "sourceLabels": ["__name__"],
+      "regex": "(^apiserver_request_duration_seconds_bucket$)",
+      "action": "drop"
+    }
+  }
+]

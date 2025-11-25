@@ -18,12 +18,17 @@ patches:
   - target:
       kind: ServiceMonitor
       labelSelector: 'release=rancher-monitoring'
-    path: patches/init-metrics.yaml
+    path: ./patches/default.json
 
   - target:
       kind: ServiceMonitor
       labelSelector: 'app=kube-prometheus-stack-kubelet'
-    path: patches/append-metrics.yaml
+    path: ./patches/kubelet.json
+
+  - target:
+      kind: ServiceMonitor
+      labelSelector: 'app=kube-prometheus-stack-apiserver'
+    path: ./patches/kubelet.json
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: 'ServerSideApply=true'

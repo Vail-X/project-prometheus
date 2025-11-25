@@ -1,0 +1,13 @@
+[
+  {
+    "op": "add",
+    "path": "/spec/endpoints/0/metricRelabelings",
+    "value": [
+      {
+        "sourceLabels": ["__name__"],
+        "regex": "(^go_.*|^promhttp_.*|^target_info$)",
+        "action": "drop"
+      }
+    ]
+  }
+]
