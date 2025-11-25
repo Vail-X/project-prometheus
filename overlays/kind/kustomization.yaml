@@ -14,21 +14,21 @@ helmCharts:
     includeCRDs: true
     namespace: cattle-monitoring-system
 
-# patches:
-#   - target:
-#       kind: ServiceMonitor
-#       labelSelector: 'release=rancher-monitoring'
-#     path: ./patches/default.json
+patches:
+  - target:
+      kind: ServiceMonitor
+      labelSelector: 'release=rancher-monitoring'
+    path: ./patches/default.json
 
-#   - target:
-#       kind: ServiceMonitor
-#       labelSelector: 'app=kube-prometheus-stack-kubelet'
-#     path: ./patches/kubelet.json
+  - target:
+      kind: ServiceMonitor
+      labelSelector: 'app=kube-prometheus-stack-kubelet'
+    path: ./patches/kubelet.json
 
-#   - target:
-#       kind: ServiceMonitor
-#       labelSelector: 'app=kube-prometheus-stack-apiserver'
-#     path: ./patches/apiserver.json
+  - target:
+      kind: ServiceMonitor
+      labelSelector: 'app=kube-prometheus-stack-apiserver'
+    path: ./patches/apiserver.json
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: 'ServerSideApply=true'
