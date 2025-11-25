@@ -30,11 +30,11 @@ patches:
       labelSelector: 'app=kube-prometheus-stack-kubelet'
     patch: |-
       - op: add
-        path: /spec/endpoints/metricRelabelings
+        path: /spec/endpoints/0/metricRelabelings/-
         value:
-          - sourceLabels: [__name__]
-            regex: "(^prober_.*$)"
-            action: drop
+          sourceLabels: [__name__]
+          regex: "(^prober_.*$)"
+          action: drop
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: 'ServerSideApply=true'
