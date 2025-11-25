@@ -14,8 +14,16 @@ helmCharts:
     includeCRDs: true
     namespace: cattle-monitoring-system
 
-patches:
-  - path: ./patches/metric-relabeling-patches.yaml
+# patches:
+#   - target:
+#       kind: ServiceMonitor
+#       labelSelector: 'release=rancher-monitoring'
+#     path: ./patches/init-metrics.yaml
+
+#   - target:
+#       kind: ServiceMonitor
+#       labelSelector: 'app=kube-prometheus-stack-kubelet'
+#     path: ./patches/append-metrics.yaml
 
 commonAnnotations:
   argocd.argoproj.io/sync-options: 'ServerSideApply=true'
