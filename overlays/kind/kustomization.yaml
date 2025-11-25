@@ -30,7 +30,7 @@ patches:
       labelSelector: 'app=kube-prometheus-stack-kubelet'
     patch: |-
       - op: add
-        path: /spec/endpoints/0/metricRelabelings/
+        path: /spec/endpoints/metricRelabelings
         value:
           - sourceLabels: [__name__]
             regex: "(^prober_.*$)"
