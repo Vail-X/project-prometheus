@@ -4,7 +4,7 @@
     "path": "/spec/endpoints/0/metricRelabelings/-",
     "value": {
       "sourceLabels": ["__name__"],
-      "regex": "(^apiserver_request_duration_seconds_bucket$)",
+      "regex": "^(apiserver_request_duration_seconds_bucket|etcd_request_duration_seconds_bucket|apiserver_request_body_size_bytes_bucket)$",
       "action": "drop"
     }
   }
