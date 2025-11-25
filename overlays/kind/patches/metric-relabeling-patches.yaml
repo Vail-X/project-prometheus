@@ -1,0 +1,21 @@
+- target:
+    kind: ServiceMonitor
+    labelSelector: 'release=rancher-monitoring'
+  patch: |-
+    - op: add
+      path: /spec/endpoints/0/metricRelabelings
+      value:
+        - sourceLabels: [__name__]
+          regex: "(^go_.*|^promhttp_.*|^target_info$)"
+          action: drop
+
+- target:
+    kind: ServiceMonitor
+    labelSelector: 'app=kube-prometheus-stack-kubelet'
+  patch: |-
+    - op: add
+      path: /spec/endpoints/0/metricRelabelings/-
+      value:
+        sourceLabels: [__name__]
+        regex: "(^prober_.*$)"
+        action: drop
