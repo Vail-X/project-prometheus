@@ -1,0 +1,47 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: team-storage-smart-alert
+  labels:
+    release: rancher-monitoring
+spec:
+  groups:
+    - name: storage-calculation
+      rules:
+        - record: job:team_storage_usage:ratio
+          expr: >
+            (
+              sum by (team) (
+                label_replace(
+                  label_replace(
+                    rate(scrape_samples_scraped[1d]),
+                    "team", "platform", "namespace", ".*"
+                  ),
+                  "team", "arema", "namespace", "arema.*"
+                )
+              )
+              /
+              scalar(sum(rate(scrape_samples_scraped[1d])))
+            )
+            * scalar(
+              max(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~".*prometheus.*"})
+              -
+              max(kubelet_volume_stats_available_bytes{persistentvolumeclaim=~".*prometheus.*"})
+            )
+            /
+            scalar(prometheus_tsdb_retention_limit_bytes)
+
+        - alert: TeamStorageQuotaHigh
+          expr: >
+            (job:team_storage_usage:ratio{team="arema"} > 0.60)
+            or
+            (job:team_storage_usage:ratio{team="platform"} > 0.01)
+
+          for: 1h
+
+          labels:
+            severity: warning
+
+          annotations:
+            summary: 'Team {{ $labels.team }} is using high storage'
+            description: 'Team {{ $labels.team }} is currently consuming {{ $value | humanizePercentage }} of the total Prometheus retention limit.'

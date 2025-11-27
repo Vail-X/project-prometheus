@@ -925,7 +925,8 @@ alertmanager:
     ## Secrets is a list of Secrets in the same namespace as the Alertmanager object, which shall be mounted into the
     ## Alertmanager Pods. The Secrets are mounted into /etc/alertmanager/secrets/.
     ##
-    secrets: []
+    secrets:
+      - alertmanager-webhook-secret
 
     ## If false then the user will opt out of automounting API credentials.
     ##
@@ -4206,7 +4207,7 @@ prometheus:
 
     ## Maximum size of metrics
     ## Unit format should be in the form of "50GiB"
-    retentionSize: ""
+    retentionSize: 50GiB
 
     ## Allow out-of-order/out-of-bounds samples ingested into Prometheus for a specified duration
     ## See https://prometheus.io/docs/prometheus/latest/configuration/configuration/#tsdb
@@ -4307,7 +4308,14 @@ prometheus:
     ## Prometheus StorageSpec for persistent data
     ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/platform/storage.md
     ##
-    storageSpec: {}
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: standard
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 60Gi
     ## Using PersistentVolumeClaim
     ##
     #  volumeClaimTemplate:

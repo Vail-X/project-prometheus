@@ -1,0 +1,45 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: monitoring-stack-alert
+  namespace: cattle-monitoring-system
+spec:
+  route:
+    receiver: blackhole
+    groupBy: ['alertname', 'team', 'severity']
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 1h
+
+    routes:
+      - matchers:
+          - name: team
+            value: platform
+            regex: false
+        receiver: 'platform'
+      - matchers:
+          - name: team
+            value: arema
+            regex: false
+        receiver: 'arema'
+
+  inhibitRules:
+    - sourceMatch: [{ name: severity, value: critical, regex: false }]
+      targetMatch: [{ name: severity, value: warning|info, regex: true }]
+      equal: ['env', 'cluster', 'service', 'alertname', 'team']
+
+  receivers:
+    - name: blackhole
+
+    - name: 'platform'
+      webhookConfigs:
+        - urlSecret:
+            name: alertmanager-webhook-secret
+            key: arema-url
+          sendResolved: true
+    - name: 'arema'
+      webhookConfigs:
+        - urlSecret:
+            name: alertmanager-webhook-secret
+            key: arema-url
+          sendResolved: true

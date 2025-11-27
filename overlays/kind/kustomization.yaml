@@ -4,6 +4,8 @@ namespace: cattle-monitoring-system
 
 resources:
   - ./resources/namespace.yaml
+  - ./resources/alertmanagerconfig.yaml
+  - ./resources/prometheusrules.yaml
 
 helmGlobals:
   chartHome: ../../charts
