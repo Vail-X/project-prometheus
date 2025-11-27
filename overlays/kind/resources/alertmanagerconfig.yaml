@@ -35,7 +35,7 @@ spec:
       webhookConfigs:
         - urlSecret:
             name: alertmanager-webhook-secret
-            key: arema-url
+            key: platform-url
           sendResolved: true
     - name: 'arema'
       webhookConfigs:

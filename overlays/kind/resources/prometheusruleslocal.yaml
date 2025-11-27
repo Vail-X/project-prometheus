@@ -35,7 +35,7 @@ spec:
             or
             (team_storage_usage_ratio{team="platform"} > 0.0001)
 
-          for: 1h
+          for: 1s
 
           labels:
             severity: warning
