@@ -24,9 +24,7 @@ spec:
               scalar(sum(rate(scrape_samples_scraped[1d])))
             )
             * scalar(
-              max(kubelet_volume_stats_capacity_bytes{persistentvolumeclaim=~".*prometheus.*"})
-              -
-              max(kubelet_volume_stats_available_bytes{persistentvolumeclaim=~".*prometheus.*"})
+              sum(prometheus_tsdb_storage_blocks_bytes + prometheus_tsdb_wal_storage_size_bytes)
             )
             /
             scalar(prometheus_tsdb_retention_limit_bytes)
@@ -35,7 +33,7 @@ spec:
           expr: >
             (team_storage_usage_ratio{team="arema"} > 0.60)
             or
-            (team_storage_usage_ratio{team="platform"} > 0.0011)
+            (team_storage_usage_ratio{team="platform"} > 0.0001)
 
           for: 1h
 
