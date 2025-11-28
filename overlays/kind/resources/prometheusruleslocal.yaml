@@ -8,6 +8,7 @@ spec:
   groups:
     - name: storage-calculation
       rules:
+        # 1. RECORDING RULE (Granular - Includes all your labels)
         - record: team_storage_usage_ratio
           expr: >
             (
@@ -32,13 +33,13 @@ spec:
         - alert: TeamStorageQuotaHigh
           expr: >
             (
-              team_storage_usage_ratio{team="arema"}
+              topk by (team) (1, team_storage_usage_ratio{team="arema"})
               and on(team)
               (sum by (team) (team_storage_usage_ratio) > 0.60)
             )
             or
             (
-              team_storage_usage_ratio{team="platform"}
+              topk by (team) (1, team_storage_usage_ratio{team="platform"})
               and on(team)
               (sum by (team) (team_storage_usage_ratio) > 0.0001)
             )
@@ -46,5 +47,5 @@ spec:
           labels:
             severity: warning
           annotations:
-            summary: 'High Storage: {{ $labels.team }}'
-            description: 'Service {{ $labels.service }} (Pod: {{ $labels.instance }}) in {{ $labels.namespace }} is contributing {{ $value | humanizePercentage }}.'
+            summary: 'High Storage: Team {{ $labels.team }}'
+            description: 'Team {{ $labels.team }} is over quota. Top Offender: Service {{ $labels.service }} (Pod {{ $labels.instance }}) in {{ $labels.namespace }} is using {{ $value | humanizePercentage }} by itself.'
