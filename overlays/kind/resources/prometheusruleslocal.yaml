@@ -39,7 +39,7 @@ spec:
 
           labels:
             severity: warning
-
+            namespace: cattle-monitoring-system
           annotations:
             summary: 'Team {{ $labels.team }} is using high storage'
             description: 'Team {{ $labels.team }} is currently consuming {{ $value | humanizePercentage }} of the total Prometheus retention limit.'
