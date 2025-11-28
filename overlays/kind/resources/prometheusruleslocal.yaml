@@ -11,7 +11,7 @@ spec:
         - record: team_storage_usage_ratio
           expr: >
             (
-              sum by (team, namespace, job, instance, service) (
+              sum by (team, namespace, job) (
                 label_replace(
                   label_replace(
                     rate(scrape_samples_scraped[1d]),
@@ -34,7 +34,7 @@ spec:
             (
               topk by (team) (1, team_storage_usage_ratio{team="arema"})
               and on(team)
-              (sum by (team) (team_storage_usage_ratio) > 0.000001)
+              (sum by (team) (team_storage_usage_ratio) > 0.60)
             )
             or
             (
@@ -47,4 +47,4 @@ spec:
             severity: warning
           annotations:
             summary: 'High Storage: Team {{ $labels.team }}'
-            description: 'Team {{ $labels.team }} is over quota. Top Offender: Service {{ $labels.service }} (Pod {{ $labels.instance }}) in {{ $labels.namespace }} is using {{ $value | humanizePercentage }} by itself.'
+            description: 'Team {{ $labels.team }} is over quota. Top Offender: Job {{ $labels.job }} in {{ $labels.namespace }} is using {{ $value | humanizePercentage }} by itself.'
