@@ -11,7 +11,7 @@ spec:
         - record: team_storage_usage_ratio
           expr: >
             (
-              sum by (team) (
+              sum by (team, namespace, job, instance, service) (
                 label_replace(
                   label_replace(
                     rate(scrape_samples_scraped[1d]),
@@ -31,15 +31,20 @@ spec:
 
         - alert: TeamStorageQuotaHigh
           expr: >
-            (team_storage_usage_ratio{team="arema"} > 0.60)
+            (
+              team_storage_usage_ratio{team="arema"}
+              and on(team)
+              (sum by (team) (team_storage_usage_ratio) > 0.60)
+            )
             or
-            (team_storage_usage_ratio{team="platform"} > 0.0001)
-
+            (
+              team_storage_usage_ratio{team="platform"}
+              and on(team)
+              (sum by (team) (team_storage_usage_ratio) > 0.0001)
+            )
           for: 1s
-
           labels:
             severity: warning
-            namespace: cattle-monitoring-system
           annotations:
-            summary: 'Team {{ $labels.team }} is using high storage'
-            description: 'Team {{ $labels.team }} is currently consuming {{ $value | humanizePercentage }} of the total Prometheus retention limit.'
+            summary: 'High Storage: {{ $labels.team }}'
+            description: 'Service {{ $labels.service }} (Pod: {{ $labels.instance }}) in {{ $labels.namespace }} is contributing {{ $value | humanizePercentage }}.'
