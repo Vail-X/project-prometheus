@@ -1,7 +1,7 @@
 [
   {
     "op": "add",
-    "path": "/spec/endpoints/0/metricRelabelings/-",
+    "path": "/spec/endpoints/1/metricRelabelings/-",
     "value": {
       "sourceLabels": ["__name__"],
       "regex": "(^container_blkio_device_usage_total$)",
