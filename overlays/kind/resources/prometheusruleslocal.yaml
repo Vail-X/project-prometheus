@@ -1,12 +1,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: team-storage-smart-alert
+  name: team-storage.rules
   labels:
     release: rancher-monitoring
 spec:
   groups:
-    - name: storage-calculation
+    - name: team-storage
       rules:
         - record: team:storage_usage:ratio
           expr: >

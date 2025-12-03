@@ -1,12 +1,12 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
-  name: team-storage-smart-alert
+  name: team-storage.rules
   labels:
     release: rancher-monitoring
 spec:
   groups:
-    - name: storage-calculation
+    - name: team-storage
       rules:
         - record: team:storage_usage:ratio
           expr: >
@@ -37,19 +37,19 @@ spec:
         - alert: TeamStorageQuotaHigh
           expr: >
             (
-              team:storage_usage:ratio{team="arema"}
+              topk by (team) (1, team:storage_usage:ratio{team="arema"})
               and on(team)
-              (sum by (team) (team:storage_usage:ratio) > 0.60)
+              (sum by (team) (team:storage_usage:ratio) > 0.50)
             )
             or
             (
-              team:storage_usage:ratio{team="platform"}
+              topk by (team) (1, team:storage_usage:ratio{team="platform"})
               and on(team)
-              (sum by (team) (team:storage_usage:ratio) > 0.0001)
+              (sum by (team) (team:storage_usage:ratio) > 0.50)
             )
-          for: 1s
+          for: 15m
           labels:
             severity: warning
           annotations:
-            summary: 'High Storage: {{ $labels.team }}'
-            description: 'Service {{ $labels.service }} (Pod: {{ $labels.instance }}) in {{ $labels.namespace }} is contributing {{ $value | humanizePercentage }}.'
+            summary: 'High Storage: Team {{ $labels.team }}'
+            description: 'Team {{ $labels.team }} is over quota. Top Offender: Job {{ $labels.job }} in {{ $labels.namespace }} is using {{ $value | humanizePercentage }} by itself.'
