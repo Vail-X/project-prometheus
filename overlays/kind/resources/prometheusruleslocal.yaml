@@ -8,16 +8,18 @@ spec:
   groups:
     - name: storage-calculation
       rules:
-        - record: team_storage_usage_ratio
+        - record: team:storage_usage:ratio
           expr: >
             (
               sum by (team, namespace, job) (
                 label_replace(
                   label_replace(
                     rate(scrape_samples_scraped[1d]),
-                    "team", "platform", "namespace", ".*"
+                    "team", "$1",
+                    "namespace", "([^-]+).*"
                   ),
-                  "team", "arema", "namespace", "arema.*|vm"
+                  "team", "platform",
+                  "team", "cattle|argocd|kube|airflow|airflow3|vm|default"
                 )
               )
               /
@@ -32,15 +34,15 @@ spec:
         - alert: TeamStorageQuotaHigh
           expr: >
             (
-              topk by (team) (1, team_storage_usage_ratio{team="arema"})
+              topk by (team) (1, team:storage_usage:ratio{team="arema"})
               and on(team)
-              (sum by (team) (team_storage_usage_ratio) > 0.60)
+              (sum by (team) (team:storage_usage:ratio) > 0.60)
             )
             or
             (
-              topk by (team) (1, team_storage_usage_ratio{team="platform"})
+              topk by (team) (1, team:storage_usage:ratio{team="platform"})
               and on(team)
-              (sum by (team) (team_storage_usage_ratio) > 0.0001)
+              (sum by (team) (team:storage_usage:ratio) > 0.0001)
             )
           for: 1s
           labels:
