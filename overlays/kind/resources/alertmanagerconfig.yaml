@@ -12,25 +12,21 @@ spec:
     repeatInterval: 1h
 
     routes:
-      - matchers:
-          - name: team
-            value: platform
-            regex: false
+      - matchers: [{name: team, value: platform, regex: false}]
         receiver: 'platform'
-      - matchers:
-          - name: team
-            value: arema
-            regex: false
+      - matchers: [{name: team, value: arema, regex: false}]
         receiver: 'arema'
 
   inhibitRules:
     - sourceMatch: [{ name: severity, value: critical, regex: false }]
       targetMatch: [{ name: severity, value: warning|info, regex: true }]
       equal: ['env', 'cluster', 'service', 'alertname', 'team']
+    - sourceMatch: [{ name: severity, value: warning, regex: false }]
+      targetMatch: [{ name: severity, value: info, regex: false }]
+      equal: ['env', 'cluster', 'service', 'alertname', 'team']
 
   receivers:
     - name: blackhole
-
     - name: 'platform'
       webhookConfigs:
         - urlSecret:
