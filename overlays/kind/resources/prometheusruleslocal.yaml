@@ -42,7 +42,7 @@ spec:
             (
               topk by (team) (1, team:storage_usage:ratio{team="platform"})
               and on(team)
-              (sum by (team) (team:storage_usage:ratio) > 0.0001)
+              (sum by (team) (team:storage_usage:ratio) > 0.60)
             )
           for: 1s
           labels:
