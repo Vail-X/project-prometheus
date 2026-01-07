@@ -9,7 +9,7 @@ spec:
     groupBy: ['alertname', 'team', 'severity']
     groupWait: 30s
     groupInterval: 5m
-    repeatInterval: 1h
+    repeatInterval: 10m
 
     # routes:
     #   - matchers: [{name: team, value: platform, regex: false}]
@@ -33,20 +33,18 @@ spec:
             key: arema-sit-url
           sendResolved: true
           title: 'Prometheus Alert ({{ .Status | toUpper }})'
-          text: >-
-            {{ range .Alerts }}
+          text: |
+            {{ range .Alerts -}}
             {{ .Annotations.description }}
-
+            
             **runbook_url** {{ .Annotations.runbook_url }}
-
             **summary** {{ .Annotations.summary }}
-
             {{ range .Labels.SortedPairs -}}
             **{{ .Name }}** {{ .Value }}
-
             {{ end -}}
+            
             ---
-            {{ end }}
+            {{- end }}
     # - name: 'platform'
     #   webhookConfigs:
     #     - urlSecret:
