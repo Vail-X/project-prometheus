@@ -4450,6 +4450,19 @@ prometheus:
     additionalAlertRelabelConfigsSecret: {}
       # name:
       # key:
+    alertRelabelConfigs:
+      - sourceLabels: [namespace]
+        regex: '' # Matches if the namespace label is empty or null
+        targetLabel: namespace
+        replacement: 'cattle-monitoring-system' # Your target namespace
+        action: replace
+
+      ## Optional: Force specific jobs into the namespace for better grouping
+      - sourceLabels: [job]
+        regex: 'kube-controller-manager|kube-etcd|watchdog'
+        targetLabel: namespace
+        replacement: 'cattle-monitoring-system'
+        action: replace
 
     ## SecurityContext holds pod-level security attributes and common container settings.
     ## This defaults to non root user with uid 1000 and gid 2000.
