@@ -29,7 +29,7 @@ spec:
     - name: arema-sit
       msteamsConfigs:
         - webhookUrl:
-            name: alertmanager-secrets
+            name: alertmanager-webhook-secret
             key: arema-sit-url
           sendResolved: true
           title: 'Prometheus Alert ({{ .Status | toUpper }})'
