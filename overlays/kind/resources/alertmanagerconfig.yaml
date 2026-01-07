@@ -36,10 +36,15 @@ spec:
           text: >-
             {{ range .Alerts }}
             {{ .Annotations.description }}
+
             **runbook_url** {{ .Annotations.runbook_url }}
+
             **summary** {{ .Annotations.summary }}
-            {{ range .Labels.SortedPairs }}**{{ .Name }}** {{ .Value }}
-            {{ end }}
+
+            {{ range .Labels.SortedPairs -}}
+            **{{ .Name }}** {{ .Value }}
+
+            {{ end -}}
             ---
             {{ end }}
     # - name: 'platform'
