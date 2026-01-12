@@ -46,7 +46,7 @@ spec:
 
             
             {{ range .Labels.SortedPairs -}}
-            {**{{ .Name }}**   {{ .Value }}
+            **{{ .Name }}**   {{ .Value }}
 
             
             {{ end -}}
