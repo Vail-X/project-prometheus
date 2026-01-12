@@ -5,17 +5,17 @@ metadata:
   namespace: cattle-monitoring-system
 spec:
   route:
-    receiver: blackhole
+    receiver: arema-sit
     groupBy: ['alertname', 'team', 'severity']
     groupWait: 30s
     groupInterval: 5m
-    repeatInterval: 1h
+    repeatInterval: 10m
 
-    routes:
-      - matchers: [{name: team, value: platform, regex: false}]
-        receiver: 'platform'
-      - matchers: [{name: team, value: arema, regex: false}]
-        receiver: 'arema'
+    # routes:
+    #   - matchers: [{name: team, value: platform, regex: false}]
+    #     receiver: 'platform'
+    #   - matchers: [{name: team, value: arema, regex: false}]
+    #     receiver: 'arema'
 
   inhibitRules:
     - sourceMatch: [{ name: severity, value: critical, regex: false }]
@@ -26,16 +26,40 @@ spec:
       equal: ['env', 'cluster', 'service', 'alertname', 'team']
 
   receivers:
-    - name: blackhole
-    - name: 'platform'
-      webhookConfigs:
-        - urlSecret:
+    - name: arema-sit
+      msteamsConfigs:
+        - webhookUrl:
             name: alertmanager-webhook-secret
-            key: platform-url
+            key: arema-sit-url
           sendResolved: true
-    - name: 'arema'
-      webhookConfigs:
-        - urlSecret:
-            name: alertmanager-webhook-secret
-            key: arema-url
-          sendResolved: true
+          title: 'Prometheus Alert ({{ .Status | title }})'
+          summary: '{{ template "msteams.default.summary" . }}'
+          text: |
+            {{ range .Alerts -}}
+            {{ .Annotations.description }}
+
+            
+            **runbook_url**   {{ .Annotations.runbook_url }}
+
+
+            **summary**   {{ .Annotations.summary }}
+
+            
+            {{ range .Labels.SortedPairs -}}
+            {**{{ .Name }}**   {{ .Value }}
+
+            
+            {{ end -}}
+            {{ end }}
+    # - name: 'platform'
+    #   webhookConfigs:
+    #     - urlSecret:
+    #         name: alertmanager-webhook-secret
+    #         key: platform-url
+    #       sendResolved: true
+    # - name: 'arema'
+    #   webhookConfigs:
+    #     - urlSecret:
+    #         name: alertmanager-webhook-secret
+    #         key: arema-url
+    #       sendResolved: true
